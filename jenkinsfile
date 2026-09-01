@@ -3,8 +3,8 @@ pipeline {
     agent any
 
     environment {
-        DEPLOY_DIR = "/opt/deploy/app"
-        REPO = "https://github.com/your-user/demo-app.git"
+        DEPLOY_DIR = "/home/ubuntu/jenkins-app"
+        REPO = "https://github.com/ashishar14/Jenkins.git"
         BRANCH = "develop"
     }
 
