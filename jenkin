@@ -1,0 +1,38 @@
+
+pipeline {
+    agent any
+
+    environment {
+        DEPLOY_DIR = "/opt/deploy/app"
+        REPO = "https://github.com/your-user/demo-app.git"
+        BRANCH = "develop"
+    }
+
+    stages {
+        stage('Prepare Folder') {
+            steps {
+                sh 'mkdir -p ${DEPLOY_DIR}'
+            }
+        }
+
+        stage('Pull Git Content') {
+            steps {
+                sh '''
+                if [ -d "${DEPLOY_DIR}/.git" ]; then
+                    cd ${DEPLOY_DIR}
+                    git fetch origin
+                    git reset --hard origin/${BRANCH}
+                else
+                    git clone -b ${BRANCH} ${REPO} ${DEPLOY_DIR}
+                fi
+                '''
+            }
+        }
+
+        stage('Verify') {
+            steps {
+                sh 'ls -la ${DEPLOY_DIR}'
+            }
+        }
+    }
+}
