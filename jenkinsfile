@@ -1,23 +1,16 @@
-pipeline {
-    agent { label 'test' }
+stage('Deploy') {
+    steps {
+        sh '''
+        echo "=== DEBUG ==="
+        hostname
+        hostname -I
+        whoami
+        pwd
 
-    triggers {
-        githubPush()
-    }
+        ls -ld /opt
+        ls -ld /opt/test-app || echo "TEST-APP NOT FOUND"
 
-    stages {
-        stage('Deploy') {
-            steps {
-                sh '''
-                echo "Workspace Files:"
-                ls -la
-
-                cp -rv * /opt/test-app/
-
-                echo "Files copied:"
-                ls -la /opt/test-app
-                '''
-            }
-        }
+        cp -rv * /opt/test-app/
+        '''
     }
 }
