@@ -1,26 +1,27 @@
 pipeline {
-    agent { label 'test' }
+    ag**t { label 'test' }
 
-    triggers {
-        githubPush()
+    triggers **        githubPush()
     }
 
-    stages {
+    s**ges {
         stage('Deploy') {
-            steps {
-                sh '''
-                echo "Running on: $(hostname)"
-                pwd
-                ls -la
+ **         steps {
+                ** '''
+                    echo "Cu**ent Workspace:"
+                 ** pwd
 
-                mkdir -p /opt/test-app
-                cp -rv * /opt/test-app/
+                    echo "W**kspace Files:"
+                  **ls -la
 
-                echo "Files in target folder:"
-                ls -la /opt/test-app
+                    mkdir**p /opt/test-app
+
+                **  cp -rv * /opt/test-app/
+
+      **            echo "Files in Test A**:"
+                    ls -la /op**test-app
                 '''
-            }
+    **      }
         }
     }
 }
-`
