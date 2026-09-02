@@ -7,11 +7,21 @@ pipeline {
 
     stages {
         stage('Deploy') {
-            when {
-                branch 'master'
-            }
             steps {
-                sh 'cp -r * /opt/prod-app/'
+                sh '''
+                    echo "Running on:"
+                    hostname
+
+                    echo "Workspace Files:"
+                    ls -la
+
+                    ls -ld /opt/prod-app
+
+                    cp -rv * /opt/prod-app/
+
+                    echo "Deployment Complete"
+                    ls -la /opt/prod-app
+                '''
             }
         }
     }
