@@ -1,35 +1,18 @@
 pipeline {
     agent { label 'test' }
 
+    triggers {
+        githubPush()
+    }
+
     stages {
-
-        stage('Verify Node') {
+        stage('Deploy') {
+            when {
+                branch 'test'
+            }
             steps {
-                sh '''
-                echo "Running on Test Node"
-                hostname
-                pwd
-                '''
+                sh 'cp -r * /opt/test-app/'
             }
         }
-
-        stage('Deploy Files') {
-            steps {
-                sh '''
-                mkdir -p /opt/test-app
-
-                cp -r * /opt/test-app/
-                '''
-            }
-        }
-
-        stage('Verify Deployment') {
-            steps {
-                sh '''
-                ls -la /opt/test-app
-                '''
-            }
-        }
-
     }
 }
