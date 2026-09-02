@@ -1,16 +1,29 @@
-stage('Deploy') {
-    steps {
-        sh '''
-        echo "=== DEBUG ==="
-        hostname
-        hostname -I
-        whoami
-        pwd
+pipeline {
+    agent { label 'test' }
 
-        ls -ld /opt
-        ls -ld /opt/test-app || echo "TEST-APP NOT FOUND"
+    triggers {
+        githubPush()
+    }
 
-        cp -rv * /opt/test-app/
-        '''
+    stages {
+        stage('Deploy') {
+            steps {
+                sh '''
+                    echo "=== DEBUG ==="
+                    hostname
+                    hostname -I
+                    whoami
+                    pwd
+
+                    ls -ld /opt
+                    ls -ld /opt/test-app || echo "TEST-APP NOT FOUND"
+
+                    cp -rv * /opt/test-app/
+
+                    echo "Deployment Complete"
+                    ls -la /opt/test-app
+                '''
+            }
+        }
     }
 }
