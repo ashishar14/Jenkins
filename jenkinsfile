@@ -1,37 +1,66 @@
-
 pipeline {
-    agent any
 
-    environment {
-        DEPLOY_DIR = "/home/ubuntu/jenkins-app"
-        REPO = "https://github.com/ashishar14/Jenkins.git"
-        BRANCH = "develop"
+    agent none
+
+    triggers {
+        githubPush()
     }
 
     stages {
-        stage('Prepare Folder') {
-            steps {
-                sh 'mkdir -p ${DEPLOY_DIR}'
-            }
-        }
 
-        stage('Pull Git Content') {
+        stage('Deploy To Test') {
+
+            agent { label 'test' }
+
             steps {
+
                 sh '''
-                if [ -d "${DEPLOY_DIR}/.git" ]; then
-                    cd ${DEPLOY_DIR}
-                    git fetch origin
-                    git reset --hard origin/${BRANCH}
-                else
-                    git clone -b ${BRANCH} ${REPO} ${DEPLOY_DIR}
-                fi
+                rm -rf /opt/test-app/*
+                cp -r * /opt/test-app/
                 '''
+
             }
         }
 
-        stage('Verify') {
+        stage('Verify Test Deployment') {
+
+            agent { label 'test' }
+
             steps {
-                sh 'ls -la ${DEPLOY_DIR}'
+
+                sh '''
+                echo "Files on Test Server:"
+                ls -la /opt/test-app
+                '''
+
+            }
+        }
+
+        stage('Deploy To Production') {
+
+            agent { label 'prod' }
+
+            steps {
+
+                sh '''
+                rm -rf /opt/prod-app/*
+                cp -r * /opt/prod-app/
+                '''
+
+            }
+        }
+
+        stage('Verify Production Deployment') {
+
+            agent { label 'prod' }
+
+            steps {
+
+                sh '''
+                echo "Files on Prod Server:"
+                ls -la /opt/prod-app
+                '''
+
             }
         }
     }
