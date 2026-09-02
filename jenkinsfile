@@ -7,12 +7,20 @@ pipeline {
 
     stages {
         stage('Deploy') {
-            when {
-                branch 'test'
-            }
             steps {
-                sh 'cp -r * /opt/test-app/'
+                sh '''
+                echo "Running on: $(hostname)"
+                pwd
+                ls -la
+
+                mkdir -p /opt/test-app
+                cp -rv * /opt/test-app/
+
+                echo "Files in target folder:"
+                ls -la /opt/test-app
+                '''
             }
         }
     }
 }
+`
