@@ -1,19 +1,17 @@
 pipeline {
     agent { label 'prod' }
 
+    triggers {
+        githubPush()
+    }
+
     stages {
         stage('Deploy') {
-            steps {
-                sh '''
-                mkdir -p /opt/prod-app
-                cp -r ${WORKSPACE}/* /opt/prod-app/
-                '''
+            when {
+                branch 'master'
             }
-        }
-
-        stage('Verify') {
             steps {
-                sh 'ls -la /opt/prod-app'
+                sh 'cp -r * /opt/prod-app/'
             }
         }
     }
