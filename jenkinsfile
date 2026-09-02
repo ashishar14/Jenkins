@@ -1,37 +1,19 @@
-
 pipeline {
-    agent any
-
-    environment {
-        DEPLOY_DIR = "/home/ubuntu/jenkins-app"
-        REPO = "https://github.com/ashishar14/Jenkins.git"
-        BRANCH = "develop"
-    }
+    agent { label 'prod' }
 
     stages {
-        stage('Prepare Folder') {
-            steps {
-                sh 'mkdir -p ${DEPLOY_DIR}'
-            }
-        }
-
-        stage('Pull Git Content') {
+        stage('Deploy') {
             steps {
                 sh '''
-                if [ -d "${DEPLOY_DIR}/.git" ]; then
-                    cd ${DEPLOY_DIR}
-                    git fetch origin
-                    git reset --hard origin/${BRANCH}
-                else
-                    git clone -b ${BRANCH} ${REPO} ${DEPLOY_DIR}
-                fi
+                mkdir -p /opt/prod-app
+                cp -r ${WORKSPACE}/* /opt/prod-app/
                 '''
             }
         }
 
         stage('Verify') {
             steps {
-                sh 'ls -la ${DEPLOY_DIR}'
+                sh 'ls -la /opt/prod-app'
             }
         }
     }
