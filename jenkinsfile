@@ -9,17 +9,13 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                    echo "Current Workspace:"
-                    pwd
+                echo "Workspace Files:"
+                ls -la
 
-                    echo "Workspace Files:"
-                    ls -la
+                cp -rv * /opt/test-app/
 
-                    mkdir -p /opt/test-app
-                    cp -rv * /opt/test-app/
-
-                    echo "Files in Test App:"
-                    ls -la /opt/test-app
+                echo "Files copied:"
+                ls -la /opt/test-app
                 '''
             }
         }
